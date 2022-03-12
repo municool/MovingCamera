@@ -7,6 +7,7 @@ import multiprocessing
 import cv2
 import sys
 import time
+import numpy
 from datetime import datetime as dt
 
 # Keep track of our processes
@@ -50,9 +51,7 @@ def log(message):
 
 
 def get_step_size(moving_distance, max_distance):
-    step_span = 5
-    value_scaled = float(moving_distance) / float(step_span)
-    return int(value_scaled * max_distance)
+    return int(numpy.interp(moving_distance, [1, max_distance], [0,5]))
 
 
 def move_camera(x, y, w, h, dimensions):
@@ -132,7 +131,6 @@ def server():
     httpd.serve_forever()
 
 def socket(man):
-    # Will handle our websocket connections
     async def handler(websocket, path):
         log("Socket opened")
         try:
@@ -143,11 +141,10 @@ def socket(man):
             log("Socket closed")
 
     log("Starting socket handler")
-    # Create the awaitable object
+
     start_server = websockets.serve(ws_handler=handler, host='0.0.0.0', port=8585)
-    # Start the server, add it to the event loop
+
     asyncio.get_event_loop().run_until_complete(start_server)
-    # Registered our websocket connection handler, thus run event loop forever
     asyncio.get_event_loop().run_forever()
 
 
