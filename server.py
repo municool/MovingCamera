@@ -51,7 +51,7 @@ def log(message):
 
 
 def get_step_size(moving_distance, max_distance):
-    return int(numpy.interp(moving_distance, [1, max_distance], [0,5]))
+    return int(numpy.interp(moving_distance, [1, max_distance], [1,5]))
 
 
 def move_camera(x, y, w, h, dimensions):
